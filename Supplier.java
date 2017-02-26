@@ -16,12 +16,11 @@ public class Supplier implements Runnable {
         //do something
       }
       int randomInt = Random.nextInt();
-      synchronized(this) {
-        while (mr.checkIfConsumed() == false) {
-          wait();
-        }
-        mr.setInfo(randomInt, this.id);
-      }
+      synchronized(mr) {
+        if (mr.checkIfConsumed() == false)
+          wait(); 
+        mr.setInfo(randomInt, this.id);   
+      } 
     }
   }
 

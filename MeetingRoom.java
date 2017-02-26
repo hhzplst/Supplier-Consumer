@@ -1,9 +1,7 @@
 public class MeetingRoom {
-  private volatile int data;
-  private volatile int consumerID;
+  private int data;
+  private int consumerID;
   private volatile boolean hasConsumed;
-
-  private MeetingRoom() {}
 
   synchronized public int getData() {
     hasConsumed = true;
