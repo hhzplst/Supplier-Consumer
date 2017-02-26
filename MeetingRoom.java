@@ -1,7 +1,7 @@
 public class MeetingRoom {
-  private int data;
-  private int consumerID;
-  private boolean hasConsumed = true;
+  private volatile int data;
+  private volatile int consumerID;
+  private volatile boolean hasConsumed = true;
 
   public int getData() {
     hasConsumed = true;

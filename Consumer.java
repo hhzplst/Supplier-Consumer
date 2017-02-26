@@ -14,11 +14,11 @@ public class Consumer implements Runnable {
   public void run() {
     while (!hasRequestedStop) {
       try {
+        fetchData();
         int sleepTime = random.nextInt(1000) + 1;
         Thread.sleep(sleepTime);
          System.out.printf("Consumer %d sleeps %d milliseconds.\n", 
                                                   this.id, sleepTime);
-         fetchData();
       } catch (InterruptedException e) {
          return;
       }
@@ -29,8 +29,8 @@ public class Consumer implements Runnable {
     synchronized(mr) {
       System.out.printf("Consumer %d enters meeting room.\n", this.id);
       if (this.id != mr.getConsumerID()) {
+          System.out.printf("Consumer %d enters waiting room.\n", this.id);
           wait(); 
-          System.out.printf("Consumer %d enters waiting room.\n", this.id); 
       }
       int data = mr.getData();
       mr.clearData();
