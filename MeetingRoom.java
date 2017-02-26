@@ -1,17 +1,25 @@
 public class MeetingRoom {
   private int data;
   private int consumerID;
-  private volatile boolean hasConsumed;
+  private boolean hasConsumed = true;
 
-  synchronized public int getData() {
+  public int getData() {
     hasConsumed = true;
     return data;
   }
 
-  synchronized public void setInfo(int data, int consumerID) {
+  public int getConsumerID() {
+    return consumerID;
+  }
+
+  public void setInfo(int data, int consumerID) {
     this.data = data;
     this.consumerID = consumerID;
     hasConsumed = false;
+  }
+
+  public void clearData() {
+    data = 0;
   }
 
   public boolean checkIfConsumed() {

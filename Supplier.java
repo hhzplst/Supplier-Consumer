@@ -1,7 +1,10 @@
+import java.util.Random;
+
 public class Supplier implements Runnable {
   private static MeetingRoom mr;
   private int id;
   private boolean hasRequestedStop = false;
+  private static Random random = new Random();
 
   public Supplier(int id, MeetingRoom mr) {
     this.id = id;
@@ -11,17 +14,31 @@ public class Supplier implements Runnable {
   public void run() {
     while (!hasRequestedStop) {
       try {
-        Thread.sleep(1000);
+        int sleepTime = random.nextInt(1000) + 1;
+        Thread.sleep(sleepTime);
+        System.out.printf("Supplier %d sleeps %d milliseconds.\n", 
+                                                  this.id, sleepTime);
+        leaveData(); 
       } catch (InterruptedException e) {
-        //do something
+        return;
       }
-      int randomInt = Random.nextInt();
-      synchronized(mr) {
-        if (mr.checkIfConsumed() == false)
-          wait(); 
-        mr.setInfo(randomInt, this.id);   
-      } 
     }
+  }
+
+  private synchronized void leaveData() throws InterruptedException {
+    int randomInt = random.nextInt() + 1;
+    System.out.printf("Supplier %d produces data.\n", this.id);
+    synchronized(mr) {
+      System.out.printf("Supplier %d enters meeting room.\n", this.id);
+      if (mr.checkIfConsumed() == false) {
+          wait();  
+          System.out.printf("Supplier %d enters waiting room.\n", this.id);
+      }
+      mr.setInfo(randomInt, this.id);
+      System.out.printf("Supplier %d leaves data for its consumer.\n", this.id);
+      notifyAll();  
+    }
+    System.out.printf("Supplier %d leaves meeting room.\n", this.id);
   }
 
   public void requestStop() {
