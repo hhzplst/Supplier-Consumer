@@ -25,18 +25,18 @@ public class Supplier implements Runnable {
     }
   }
 
-  private synchronized void leaveData() throws InterruptedException {
+  private void leaveData() throws InterruptedException {
     int randomInt = random.nextInt() + 1;
     System.out.printf("Supplier %d produces data.\n", this.id);
     synchronized(mr) {
       System.out.printf("Supplier %d enters meeting room.\n", this.id);
-      if (mr.checkIfConsumed() == false) {
+      while (mr.checkIfEmpty() == false) {
           System.out.printf("Supplier %d enters waiting room.\n", this.id);
-          wait();    
+          mr.wait();    
       }
       mr.setInfo(randomInt, this.id);
       System.out.printf("Supplier %d leaves data for its consumer.\n", this.id);
-      notifyAll();  
+      mr.notifyAll();  
     }
     System.out.printf("Supplier %d leaves meeting room.\n", this.id);
   }

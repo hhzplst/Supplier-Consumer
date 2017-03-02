@@ -1,11 +1,11 @@
 public class MeetingRoom {
   private volatile int data;
   private volatile int consumerID;
-  private volatile boolean hasConsumed = true;
+  private volatile boolean isEmpty = true;
 
-  public int getData() {
-    hasConsumed = true;
-    return data;
+  public void getData() {
+    isEmpty = true;
+    data = 0;
   }
 
   public int getConsumerID() {
@@ -15,14 +15,10 @@ public class MeetingRoom {
   public void setInfo(int data, int consumerID) {
     this.data = data;
     this.consumerID = consumerID;
-    hasConsumed = false;
+    isEmpty = false;
   }
 
-  public void clearData() {
-    data = 0;
-  }
-
-  public boolean checkIfConsumed() {
-    return hasConsumed;
+  public boolean checkIfEmpty() {
+    return isEmpty;
   }
 }

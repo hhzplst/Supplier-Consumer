@@ -25,17 +25,16 @@ public class Consumer implements Runnable {
     }   
   }
 
-  private synchronized void fetchData() throws InterruptedException {
+  private void fetchData() throws InterruptedException {
     synchronized(mr) {
       System.out.printf("Consumer %d enters meeting room.\n", this.id);
-      if (this.id != mr.getConsumerID()) {
+      while (mr.checkIfEmpty() || this.id != mr.getConsumerID()) {
           System.out.printf("Consumer %d enters waiting room.\n", this.id);
-          wait(); 
+          mr.wait(); 
       }
-      int data = mr.getData();
-      mr.clearData();
+      mr.getData();
       System.out.printf("Consumer %d removes data.\n", this.id);
-      notify();
+      mr.notify();
       System.out.printf("Consumer %d leaves meeting room.\n", this.id);
     }
   }
